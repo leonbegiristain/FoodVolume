@@ -1,66 +1,22 @@
 import torch
-from Object_Reconstruction import preprocess_pcd
+#from Object_Reconstruction import preprocess_pcd
 import numpy as np
 from PIL import Image
 from PIL.ExifTags import TAGS
 import cv2
 import os
-import piexif
+#import piexif
 import sys
-metric3d_path = './Metric3D'
-sys.path.append(metric3d_path) # Add Metric3D to path, otherwise imports inside Metric3D will fail
-from Metric3D.predict_dir import predict_folder
 from FastSAM.fastsam import FastSAM, FastSAMPrompt
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-source_path = './image-source/banana'
-input_type = 'jpg'
 
-rec_input_path = './input/banana'
+rec_input_path = './images/banana'
 rec_input_name = 'image'
 
-assert os.path.exists(source_path), "Input path does not exist"
-source_path = os.path.abspath(source_path)
-
-# 0. Get intrinsic matrix
-
-print('========================')
-print('Getting intrinsic matrix')
-print('========================')
-
-# first_file = next(file for file in os.listdir(source_path) if file.endswith('.' + input_type))
-# img = Image.open(os.path.join(source_path, first_file))
-# exif_data = img._getexif()
-# for tag_id in exif_data:
-#     # get the tag name, instead of human unreadable tag id
-#     tag = TAGS.get(tag_id, tag_id)
-#     data = exif_data.get(tag_id)
-#     # decode bytes 
-#     if isinstance(data, bytes):
-#         data = data.decode()
-#     print(f"{tag:25}, {tag_id}: {data}")
-
-# print(exif_data)
-# focal_length = exif_data[37386] # Focal Length
-# print(f"Focal Length: {focal_length}")
-# if exif_data.get(256) is None or exif_data.get(257) is None:
-#     print("Image Width and Height not found in metadata")
-#     width, height = img.size
-# else:
-#     width, height = exif_data[256], exif_data[257] # Image Width, Image Height
-# print(f"Image Width: {width}, Image Height: {height}")
-
-# sensor_pixel_size = 1.2 # um
-# focal_length_pixel = focal_length / (sensor_pixel_size * 1e-3) # mm to um --> pixel
-
-# K = np.array([
-#     [focal_length_pixel, 0,                  width / 2  ],
-#     [0,                  focal_length_pixel, height / 2 ],
-#     [0,                  0,                  1          ]
-# ], dtype=np.float64)
-
-# print(K)
+source_path = './images copy/banana'
+input_type = 'jpg'
 
 # 1. Copy RGB images
 
@@ -74,11 +30,7 @@ if os.path.exists(os.path.join(rec_input_path, 'rgb')):
         os.remove(os.path.join(rec_input_path, 'rgb', file))
 else:
     os.makedirs(os.path.join(rec_input_path, 'rgb'))
-if os.path.exists(os.path.join(rec_input_path, 'depth')):
-    for file in os.listdir(os.path.join(rec_input_path, 'depth')):
-        os.remove(os.path.join(rec_input_path, 'depth', file))
-else:
-    os.makedirs(os.path.join(rec_input_path, 'depth'))
+
 
 # Assuming all images have the same size
 
@@ -89,25 +41,6 @@ for count, file in enumerate(os.listdir(source_path)):
         # img = img.resize((int(img.size[0] * scale), int(img.size[1] * scale)))
         name_count = str(count + 1).rjust(3, '0')
         img.save(os.path.join(rec_input_path, 'rgb', f'{rec_input_name}{name_count}.{input_type}'))
-
-# 2. Metric 3D depth estimation
-
-print('========================')
-print('Running Metric 3D')
-print('========================')
-
-
-# predict_folder(
-#     input_dir=os.path.join(rec_input_path, 'rgb'),
-#     output_dir=os.path.join(rec_input_path, 'depth'),
-#     fx=focal_length_pixel,
-#     cx=width / 2,
-#     cy=height / 2,
-#     metric3d_path=metric3d_path,
-#     # config='./mono/configs/HourglassDecoder/vit.raft5.large.py',
-#     # ckpt='./weight/metric_depth_vit_large_800k.pth',
-#     # device=device,
-# )
 
 # 3. FastSAM mask prediction
 
@@ -125,7 +58,7 @@ if os.path.exists(os.path.join(rec_input_path, 'mask')):
 else:
     os.makedirs(os.path.join(rec_input_path, 'mask'))
 
-model = FastSAM('../FastSAM-s.pt')
+model = FastSAM('../models/FastSAM-s.pt')
 
 import cv2
 import numpy as np
@@ -207,7 +140,3 @@ for count, file in enumerate(os.listdir(os.path.join(rec_input_path, 'rgb'))):
     np.save(os.path.join(rec_input_path, 'mask', f'{rec_input_name}{name_count}.npy'), mask)
     
 
-# 4. RGBD to PCD and clean up
-
-# print(K)
-# preprocess_pcd.rgbd_to_pcd(rec_input_path, './output/salt', rec_input_name, debug=True, input_type=input_type, K=K)

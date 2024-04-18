@@ -1,6 +1,10 @@
 import numpy as np
 
-def loadDMAP(dmap_path):
+def loadDMAP(dmap_path: str) -> dict:
+  """
+  Load a depth map file (.dmap) and return its content as a dictionary.
+  """
+
   with open(dmap_path, 'rb') as dmap:
     file_type = dmap.read(2).decode()
     content_type = np.frombuffer(dmap.read(1), dtype=np.dtype('B'))
