@@ -19,7 +19,6 @@ log/
 .idea/
 # C extensions
 *.so
-results/
 **.DS_Store
 **.pt
 demo/
