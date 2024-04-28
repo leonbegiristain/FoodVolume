@@ -4766,6 +4766,7 @@ Philips i966 Aurora;6.17
 Pixel 2 XL;5.5
 Pixel 3 XL;5.76
 Pixel 3a;5.76
+Google Pixel 4a;5.76
 PL-D755;6.16
 Poptel P10;4.69
 Poptel P60;4.74
