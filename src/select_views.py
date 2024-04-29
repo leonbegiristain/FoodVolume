@@ -86,12 +86,19 @@ def select_views(dmap_list: list, n_views: int, selected_indeces: list = [], alp
 
 if __name__ == "__main__":
     # Example usage
-    dmap_list = [{"depth_map": np.random.rand(10, 10), "R": np.random.rand(3, 3), "C": np.random.rand(3)} for _ in range(100)]
-    selected_views = select_views(dmap_list, 3, [], 1, 0)
+    # dmap_list = [{"depth_map": np.random.rand(10, 10), "R": np.random.rand(3, 3), "C": np.random.rand(3)} for _ in range(100)]
+    output_path = "./results/flour_coin/"
+    import os
+    from read_dmap import loadDMAP
+    dmap_paths = [output_path + f for f in os.listdir(output_path) if f.endswith(".dmap")]
+
+    dmap_list = [loadDMAP(path) for path in dmap_paths]
+    selected_views = select_views(dmap_list, 7, [0], 1, 0.3)
     import matplotlib.pyplot as plt
-    plt.figure()
-    plt.plot([(-dmap["R"] @ dmap["C"])[0] for dmap in dmap_list], [(-dmap["R"] @ dmap["C"])[1] for dmap in dmap_list], 'ro')
-    plt.plot([(-dmap["R"] @ dmap["C"])[0] for dmap in selected_views], [(-dmap["R"] @ dmap["C"])[1] for dmap in selected_views], 'bo')
-    first_selection = selected_views[0]
-    plt.plot((-first_selection["R"] @ first_selection["C"])[0], (-first_selection["R"] @ first_selection["C"])[1], 'go')
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    dmapPositions = [dmap["C"] for dmap in dmap_list if dmap not in selected_views]
+    selectedPoisitions = [dmap["C"] for dmap in selected_views]
+    ax.scatter([pos[0] for pos in dmapPositions], [pos[1] for pos in dmapPositions], [pos[2] for pos in dmapPositions], c='r', marker='o')
+    ax.scatter([pos[0] for pos in selectedPoisitions], [pos[1] for pos in selectedPoisitions], [pos[2] for pos in selectedPoisitions], c='b', marker='o')
     plt.show()
