@@ -1,6 +1,6 @@
 # 3D Reconstruction, Segmentation and Food Volume Estimation from Monocular Video
 * León Begiristain Ribó, Faculty of Physics and Astronomy
-* Samuel Szajbely, Faculty of Physics and Astronomy
+* Sámuel Szajbély, Faculty of Physics and Astronomy
 * Arjan Siddhpura, Faculty of Mathematics and Computer Science
 
 We outline a comprehensive approach for 3D reconstruction, segmentation, and volume estimation of objects from monocular video footage. The paper and this code addresses the challenges of featureless environments and view selection, proposing a multi-step pipeline that leverages state-of-the-art techniques in computer vision and machine learning. Key components include utilizing openMVG and openMVS libraries for 3D reconstruction, developing a novel algorithm for view selection based on the Maximum Diversity Problem (MDP), and employing FastSAM for accurate segmentation. The method also incorporates PoissonRecon for mesh reconstruction and volume computation, with scaling to metric units using a reference object. Experimental results demonstrate the effectiveness of the approach on various food items, while discussing potential extensions and improvements for future research.  
@@ -8,8 +8,6 @@ We outline a comprehensive approach for 3D reconstruction, segmentation, and vol
 --- 
 
 The following summarizes the functioning of the individual files of the source code.
-* `depth-3d-reconstruction.py`  
-The script copies RGB images from one directory to another, predicts masks using the FastSAM model for each image, allows the user to draw rectangles on the images to refine the masks, and saves the refined masks as NumPy arrays.
 
 * `extract_frames.py`  
 This Python script extracts frames from a video file, saves them as JPEG images, and copies EXIF data from a reference image to the extracted frames. The number of frames to extract is specified by the user.
@@ -25,14 +23,14 @@ This Python script extracts frames from a video file, saves them as JPEG images,
 
 ---
 
-# TODO
+### How to run
 
- - [ ] demo.ipynb
-    - [x] Frame extraction
-    - [x] OpenMVG/OpenMVS pipeline
-    - [ ] Segmentation code
-        - [ ] Intelligent view selection for segmentation?
-    - [ ] Volume computation
+Relevant details before running the code.
+
+ - If you want to run the code using a video, the video should be placed in the ./videos/ folder. If running with images, they should be placed on ./images/.
+ - If running with video, a reference image using the phone that took the video should be placed on ./reference-images/ and the "reference_path" variable should be adjusted accordingly.
+ - The company, model name and sensor width should be written in ./sensor_width_database/sensor_width_camera_database.txt as  written on the reference image metadata.
+
 
 
 
