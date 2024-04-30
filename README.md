@@ -27,10 +27,14 @@ This Python script extracts frames from a video file, saves them as JPEG images,
 
 We have only tested the pipeline on windows and all the binaries are for windows.
 
-How to prepare data to run the code:
- - If you want to run the code using a video, the video should be placed in the ./videos/ folder. If running with images, they should be placed on ./images/.
- - If running with video, a reference image using the phone that took the video should be placed on ./reference-images/ and the "reference_path" variable should be adjusted accordingly.
- - The company, model name and sensor width should be written in ./sensor_width_database/sensor_width_camera_database.txt as written on the reference image metadata.
+Running the demo:
+- The demo.ipynb is set up so that you can view our results without needing to install anything for 3 examples: a garlic, an orange and flour.
+
+Running the pipeline:
+- Make sure to install every requirement, and run the pipeline.ipynb after doing the following.
+- If you want to run the code using a video, the video should be placed in the ./videos folder. If running with images, they should be placed in the ./images folder.
+- If running with video, a reference image using the phone that took the video should be placed in ./reference-images folder and the "reference_path" variable should be adjusted accordingly.
+- The company, model name and sensor width should be written in ./sensor_width_database/sensor_width_camera_database.txt as written on the reference image metadata.
 
 
 

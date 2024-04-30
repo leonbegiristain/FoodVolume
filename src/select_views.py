@@ -1,5 +1,4 @@
 import numpy as np
-from typing import Callable
 
 
 def select_views(dmap_list: list, n_views: int, selected_indeces: list = [], alpha: float = 1, beta: float = 1) -> list:
